@@ -1,0 +1,99 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+      - '.editorconfig'
+      - '.gitignore'
+      - '.github/**'
+      - '.idea/**'
+      - '!.github/workflows/**'
+
+jobs:
+  build:
+    name: Build CI
+    runs-on: ubuntu-24.04
+    env:
+      CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
+      CCACHE_NOHASHDIR: "true"
+      CCACHE_HARDLINK: "true"
+      CCACHE_BASEDIR: "${{ github.workspace }}"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          fetch-depth: 0
+
+      - name: Config submodules
+        run: |
+          git -C "libs/LSPlant" config "submodule.test/src/main/jni/external/lsprism.update" none 2>/dev/null || true
+          git -C "libs/LSPlant" config "submodule.test/src/main/jni/external/lsparself.update" none 2>/dev/null || true
+          git -C "libs/LSPlant" config "submodule.docs/doxygen-awesome-css.update" none 2>/dev/null || true
+          git -C "libs/mmkv/MMKV" config "submodule.Python/pybind11.update" none 2>/dev/null || true
+          git submodule foreach git submodule update --init --recursive 2>/dev/null || true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        run: |
+          echo "ANDROID_HOME=${ANDROID_HOME}"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
+          mkdir -p "$ANDROID_HOME/licenses/"
+          echo > "$ANDROID_HOME/licenses/android-sdk-license"
+          echo -n 24333f8a63b6825ea9c5514f83c2829b004d1fee > "$ANDROID_HOME/licenses/android-sdk-license"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;3.31.0" "ndk;27.0.12077973" "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+          echo "sdk.dir=${ANDROID_HOME}" > local.properties
+
+      - name: Install ccache
+        run: |
+          sudo apt install -y ccache ninja-build
+          ccache -o max_size=1G
+          ccache -o hash_dir=false
+          ccache -o hard_link=true
+          ccache -o compiler_check='%compiler% -dumpmachine; %compiler% -dumpversion'
+          ccache -zp
+
+      - name: Cache Native Build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ccache
+            ~/.ccache
+            app/build/.lto-cache
+          key: native-cache-${{ github.sha }}
+          restore-keys: native-cache-
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build with Gradle
+        run: |
+          echo 'org.gradle.parallel=true' >> gradle.properties
+          echo 'org.gradle.vfs.watch=true' >> gradle.properties
+          echo 'xfqdeobf.override.ninja.path=/usr/bin/ninja' >> local.properties
+          echo 'xfqdeobf.override.cmake.version=3.31.0' >> local.properties
+          sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
+          ./gradlew :app:assembleRelease --stacktrace --info
+        env:
+          ORG_GRADLE_PROJECT_xfqdeobf_override_cmake_version: "3.31.0"
+
+      - name: Show Artifacts
+        run: |
+          echo "### Build Complete" >> $GITHUB_STEP_SUMMARY
+          find app/build/outputs/apk/release -name "*.apk" -exec sh -c 'echo "- $1"' _ {} \; >> $GITHUB_STEP_SUMMARY || true
+
+      - name: Upload APK Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: app/build/outputs/apk/release/*.apk
+          name: XfqDeobf-release-${{ github.sha }}
