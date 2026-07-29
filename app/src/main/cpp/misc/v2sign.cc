@@ -26,7 +26,7 @@ static_assert(sizeof(void *) == 4, "32-bit pointer size expected");
 #if defined(NDEBUG) || defined(TEST_SIGNATURE)
 #if !defined(MODULE_SIGNATURE)
 #error "MODULE_SIGNATURE must be defined for release build, but no signature key digest found in the signing config."
-#error "Please set it in the signing config in build.gradle, or set it in local.properties with key 'qauxv.signature.md5digest'"
+#error "Please set it in the signing config in build.gradle, or set it in local.properties with key 'xfqdeobf.signature.md5digest'"
 #endif
 static_assert(sizeof(STRING(MODULE_SIGNATURE)) == 33);
 #endif
@@ -192,7 +192,7 @@ std::vector <uint8_t> getV2SignCert(std::vector <uint8_t>& block) {
 
 
 std::string getModulePath(JNIEnv* env) {
-    jclass cMainHook = env->FindClass("io/github/qauxv/core/MainHook");
+    jclass cMainHook = env->FindClass("com/fanqie/xfqdeobf/core/MainHook");
     jclass cClass = env->FindClass("java/lang/Class");
     jmethodID mGetClassLoader = env->GetMethodID(cClass, "getClassLoader",
                                                  "()Ljava/lang/ClassLoader;");

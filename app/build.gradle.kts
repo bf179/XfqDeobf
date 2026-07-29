@@ -82,7 +82,7 @@ fun getSignatureKeyDigest(signConfig: SigningConfig?): String? {
         val digest = md.digest(cert.encoded)
         digest.joinToString("") { "%02X".format(it) }
     } else null
-    val key2: String? = Version.getLocalProperty(project, "qauxv.signature.md5digest")
+    val key2: String? = Version.getLocalProperty(project, "xfqdeobf.signature.md5digest")
         ?.uppercase(Locale.ROOT)?.ifEmpty { null }
     // check if key1 and key2 are the same
     if (key1 != null && key2 != null && key1 != key2) {

@@ -81,6 +81,7 @@ jobs:
           echo 'org.gradle.parallel=true' >> gradle.properties
           echo 'org.gradle.vfs.watch=true' >> gradle.properties
           echo 'xfqdeobf.override.ninja.path=/usr/bin/ninja' >> local.properties
+          echo 'xfqdeobf.signature.md5digest=00000000000000000000000000000000' >> local.properties
           echo 'xfqdeobf.override.cmake.version=3.31.0' >> local.properties
           sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
           ./gradlew :app:assembleRelease --stacktrace --info
