@@ -1,6 +1,6 @@
 syntax = "proto3";
-package io.github.qauxv.proto.trpc.msg;
-option java_package = "io.github.qauxv.proto.trpc.msg";
+package com.fanqie.xfqdeobf.proto.trpc.msg;
+option java_package = "com.fanqie.xfqdeobf.proto.trpc.msg";
 
 import "trpc/msg/ForwardHead.proto";
 

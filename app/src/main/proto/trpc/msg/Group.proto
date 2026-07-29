@@ -1,5 +1,5 @@
 syntax = "proto3";
-package io.github.qauxv.proto.trpc.msg;
+package com.fanqie.xfqdeobf.proto.trpc.msg;
 
 message Group {
   uint32 group_code = 1;
