@@ -5,7 +5,7 @@ package cc.ioctl.hook;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static io.github.qauxv.util.Initiator.load;
+import static com.fanqie.xfqdeobf.util.Initiator.load;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,26 +22,26 @@ import cc.ioctl.util.HookUtils;
 import cc.ioctl.util.HostInfo;
 import cc.ioctl.util.LayoutHelper;
 import cc.ioctl.util.Reflex;
-import io.github.qauxv.activity.SettingsUiFragmentHostActivity;
-import io.github.qauxv.base.annotation.FunctionHookEntry;
-import io.github.qauxv.core.HookInstaller;
-import io.github.qauxv.fragment.EulaFragment;
-import io.github.qauxv.fragment.FuncStatusDetailsFragment;
-import io.github.qauxv.hook.BasePersistBackgroundHook;
-import io.github.qauxv.lifecycle.Parasitics;
-import io.github.qauxv.step.Step;
-import io.github.qauxv.util.Initiator;
-import io.github.qauxv.util.LicenseStatus;
-import io.github.qauxv.util.Log;
-import io.github.qauxv.util.QQVersion;
-import io.github.qauxv.util.dexkit.DexDeobfsProvider;
-import io.github.qauxv.util.dexkit.DexKit;
-import io.github.qauxv.util.dexkit.DexKitTargetSealedEnum;
-import io.github.qauxv.util.dexkit.SimpleItemProcessor_Method;
-import io.github.qauxv.util.dexkit.impl.DexKitDeobfs;
-import io.github.qauxv.util.xpcompat.XC_MethodHook;
-import io.github.qauxv.util.xpcompat.XposedBridge;
-import io.github.qauxv.util.xpcompat.XposedHelpers;
+import com.fanqie.xfqdeobf.activity.SettingsUiFragmentHostActivity;
+import com.fanqie.xfqdeobf.base.annotation.FunctionHookEntry;
+import com.fanqie.xfqdeobf.core.HookInstaller;
+import com.fanqie.xfqdeobf.fragment.EulaFragment;
+import com.fanqie.xfqdeobf.fragment.FuncStatusDetailsFragment;
+import com.fanqie.xfqdeobf.hook.BasePersistBackgroundHook;
+import com.fanqie.xfqdeobf.lifecycle.Parasitics;
+import com.fanqie.xfqdeobf.step.Step;
+import com.fanqie.xfqdeobf.util.Initiator;
+import com.fanqie.xfqdeobf.util.LicenseStatus;
+import com.fanqie.xfqdeobf.util.Log;
+import com.fanqie.xfqdeobf.util.QQVersion;
+import com.fanqie.xfqdeobf.util.dexkit.DexDeobfsProvider;
+import com.fanqie.xfqdeobf.util.dexkit.DexKit;
+import com.fanqie.xfqdeobf.util.dexkit.DexKitTargetSealedEnum;
+import com.fanqie.xfqdeobf.util.dexkit.SimpleItemProcessor_Method;
+import com.fanqie.xfqdeobf.util.dexkit.impl.DexKitDeobfs;
+import com.fanqie.xfqdeobf.util.xpcompat.XC_MethodHook;
+import com.fanqie.xfqdeobf.util.xpcompat.XposedBridge;
+import com.fanqie.xfqdeobf.util.xpcompat.XposedHelpers;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -262,9 +262,9 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 int resId = ctx.getResources().getIdentifier("qui_tuning", "drawable", ctx.getPackageName());
                 Object entryItem;
                 if (ctorSimpleItemProcessorArgc == 5) {
-                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, io.github.qauxv.R.id.setting2Activity_settingEntryItem, "小番茄解混淆", resId, null);
+                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, com.fanqie.xfqdeobf.R.id.setting2Activity_settingEntryItem, "小番茄解混淆", resId, null);
                 } else {
-                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, io.github.qauxv.R.id.setting2Activity_settingEntryItem, "小番茄解混淆", resId);
+                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, com.fanqie.xfqdeobf.R.id.setting2Activity_settingEntryItem, "小番茄解混淆", resId);
                 }
                 Class<?> thatFunction0 = setOnClickListener.getParameterTypes()[0];
                 Object theUnit = thatFunction0.getClassLoader().loadClass("kotlin.Unit").getField("INSTANCE").get(null);
@@ -348,13 +348,13 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 } else {
                     item = (View) Reflex.newInstance(itemRef.getClass(), activity, Context.class);
                 }
-                item.setId(io.github.qauxv.R.id.setting2Activity_settingEntryItem);
+                item.setId(com.fanqie.xfqdeobf.R.id.setting2Activity_settingEntryItem);
                 Reflex.invokeVirtual(item, "setLeftText", "小番茄解混淆", CharSequence.class);
                 Reflex.invokeVirtual(item, "setBgType", 2, int.class);
                 if (HookInstaller.getFuncInitException() != null) {
                     Reflex.invokeVirtual(item, "setRightText", "[严重错误]", CharSequence.class);
                 } else {
-                    Reflex.invokeVirtual(item, "setRightText", "v" + io.github.qauxv.BuildConfig.VERSION_NAME, CharSequence.class);
+                    Reflex.invokeVirtual(item, "setRightText", "v" + com.fanqie.xfqdeobf.BuildConfig.VERSION_NAME, CharSequence.class);
                 }
                 item.setOnClickListener(v -> onSettingEntryClick(activity));
                 if (itemRef != null && !HostInfo.isQQHD()) {
