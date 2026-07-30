@@ -15,7 +15,7 @@ _Static_assert(sizeof(void*) == 4, "sizeof(void *) != 4");
 #endif
 
 __attribute__((used, noreturn, section(".entry_init")))
-void __libqauxv_main(void) {
+void __libxfqdeobf_main(void) {
     puts(QAUXV_VERSION_STRING);
     _exit(0);
 }
