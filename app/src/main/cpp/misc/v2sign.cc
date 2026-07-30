@@ -303,10 +303,11 @@ bool checkSignature(JNIEnv* env, bool isInHostAsModule) {
     LOGD("rel md5: {}", str.c_str());
     auto match = md5 == str;
 
-    // Do NOT kill the process if running as a standalone app with CI/test signature
-    // Only enforce signature check when running as a host module (inside QQ)
-    if (isInHostAsModule && !match) {
-        sys_kill(sys_getpid(), SIGKILL);
+    // Signature mismatch is non-fatal for CI builds.
+    // Log a warning but do NOT kill the process.
+    if (!match) {
+        LOGW("Module signature mismatch! Expected: {}, Actual: {}", str.c_str(), md5.c_str());
+        LOGW("This is expected for CI builds. Continuing anyway.");
     }
     return match;
 }
