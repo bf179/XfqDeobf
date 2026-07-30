@@ -34,7 +34,7 @@ jboolean handleSendCardMsg(JNIEnv* env, jclass clazz, jobject rt, jobject sessio
                                                "getReason",
                                                "()Ljava/lang/String;");
         auto reason = (jstring) env->CallObjectMethod(result, getReason);
-        jclass cl_Toasts = env->FindClass("io/github/qauxv/util/Toasts");
+        jclass cl_Toasts = env->FindClass("com/fanqie/xfqdeobf/util/Toasts");
         jmethodID showErrorToastAnywhere = env->GetStaticMethodID(
                 cl_Toasts, "error",
                 "(Landroid/content/Context;Ljava/lang/CharSequence;)V");
@@ -48,12 +48,12 @@ jboolean handleSendCardMsg(JNIEnv* env, jclass clazz, jobject rt, jobject sessio
     if (format == '<') {
         jclass AbsStructMsg = env->FindClass("com/tencent/mobileqq/structmsg/AbsStructMsg");
         if (!AbsStructMsg)return false;
-        jclass DexKit = env->FindClass("io/github/qauxv/util/dexkit/DexKit");
-        jmethodID cid = env->GetStaticMethodID(DexKit, "loadClassFromCache", "(Lio/github/qauxv/util/dexkit/DexKitTarget;)Ljava/lang/Class;");
+        jclass DexKit = env->FindClass("com/fanqie/xfqdeobf/util/dexkit/DexKit");
+        jmethodID cid = env->GetStaticMethodID(DexKit, "loadClassFromCache", "(Lcom/fanqie/xfqdeobf/util/dexkit/DexKitTarget;)Ljava/lang/Class;");
         auto TestStructMsg = (jclass) env->CallStaticObjectMethod(DexKit, cid, env->GetStaticObjectField(
-                env->FindClass("io/github/qauxv/util/dexkit/CTestStructMsg"), env->GetStaticFieldID(
-                        env->FindClass("io/github/qauxv/util/dexkit/CTestStructMsg"), "INSTANCE",
-                        "Lio/github/qauxv/util/dexkit/CTestStructMsg;")));
+                env->FindClass("com/fanqie/xfqdeobf/util/dexkit/CTestStructMsg"), env->GetStaticFieldID(
+                        env->FindClass("com/fanqie/xfqdeobf/util/dexkit/CTestStructMsg"), "INSTANCE",
+                        "Lcom/fanqie/xfqdeobf/util/dexkit/CTestStructMsg;")));
         if (TestStructMsg == nullptr) {
             env->ThrowNew(env->FindClass("java/lang/RuntimeException"), "class TestStructMsg not found");
             return false;
@@ -73,7 +73,7 @@ jboolean handleSendCardMsg(JNIEnv* env, jclass clazz, jobject rt, jobject sessio
             env->ThrowNew(env->FindClass("java/lang/ClassCastException"), "expected AbsStructMsg");
             return false;
         }
-        jclass ChatActivityFacade = env->FindClass("io/github/qauxv/bridge/ChatActivityFacade");
+        jclass ChatActivityFacade = env->FindClass("com/fanqie/xfqdeobf/bridge/ChatActivityFacade");
         jmethodID sendAbsStructMsg = env->GetStaticMethodID(ChatActivityFacade, "sendAbsStructMsg",
                                                             "(Lmqq/app/AppRuntime;Landroid/os/Parcelable;Ljava/io/Externalizable;)V");
         env->CallStaticVoidMethod(ChatActivityFacade, sendAbsStructMsg, rt, session, structMsg);
@@ -91,7 +91,7 @@ jboolean handleSendCardMsg(JNIEnv* env, jclass clazz, jobject rt, jobject sessio
         if (!env->CallBooleanMethod(arkMsg, fromAppXml, msg)) {
             return false;
         }
-        jclass ChatActivityFacade = env->FindClass("io/github/qauxv/bridge/ChatActivityFacade");
+        jclass ChatActivityFacade = env->FindClass("com/fanqie/xfqdeobf/bridge/ChatActivityFacade");
         jmethodID sendArkAppMessage = env->GetStaticMethodID(ChatActivityFacade,
                                                              "sendArkAppMessage",
                                                              "(Lmqq/app/AppRuntime;Landroid/os/Parcelable;Ljava/lang/Object;)Z");

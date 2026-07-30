@@ -336,4 +336,4 @@ static JNINativeMethod gMethods[] = {
         {"nativePcm16leToSilkSS", "(Ljava/lang/String;Ljava/lang/String;IIIZ)V", reinterpret_cast<void*>(Java_com_fanqie_xfqdeobf_util_ptt_SilkEncodeUtils_nativePcm16leToSilkSS)},
 };
 //@formatter:on
-REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("io/github/qauxv/util/ptt/SilkEncodeUtils", gMethods);
+REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("com/fanqie/xfqdeobf/util/ptt/SilkEncodeUtils", gMethods);

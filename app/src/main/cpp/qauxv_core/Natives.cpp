@@ -978,4 +978,4 @@ static JNINativeMethod gMethods[] = {
 };
 //@formatter:on
 
-REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("io/github/qauxv/util/Natives", gMethods);
+REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("com/fanqie/xfqdeobf/util/Natives", gMethods);

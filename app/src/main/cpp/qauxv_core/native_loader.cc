@@ -514,7 +514,7 @@ static JNINativeMethod gPrimaryPreInitMethods[] = {
         {"nativeGetPrimaryNativeLibraryHandle", "()J", (void*) Java_com_fanqie_xfqdeobf_util_soloader_NativeLoader_nativeGetPrimaryNativeLibraryHandle},
 };
 //@formatter:on
-REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("io/github/qauxv/util/soloader/NativeLoader", gPrimaryPreInitMethods);
+REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("com/fanqie/xfqdeobf/util/soloader/NativeLoader", gPrimaryPreInitMethods);
 
 //@formatter:off
 static JNINativeMethod gSecondaryFullInitMethods[] = {
@@ -522,7 +522,7 @@ static JNINativeMethod gSecondaryFullInitMethods[] = {
         {"getSecondaryNativeLibraryIsa", "()I", (void*) Java_com_fanqie_xfqdeobf_util_soloader_NativeLoader_getSecondaryNativeLibraryIsa},
 };
 //@formatter:on
-REGISTER_SECONDARY_FULL_INIT_NATIVE_METHODS("io/github/qauxv/util/soloader/NativeLoader", gSecondaryFullInitMethods);
+REGISTER_SECONDARY_FULL_INIT_NATIVE_METHODS("com/fanqie/xfqdeobf/util/soloader/NativeLoader", gSecondaryFullInitMethods);
 
 bool qauxv::nativeloader::CheckClassLoaderNativeNamespaceBridged(JNIEnv* env, jobject class_loader, bool is_bridge) {
     if (class_loader == nullptr) {

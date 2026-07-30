@@ -111,7 +111,7 @@ target_include_directories(xfqdeobf-core0 PRIVATE ../../../../libs/LSPlant/lspla
 target_include_directories(xfqdeobf-core0 PRIVATE ../../../../libs/mmkv/MMKV/Core)
 target_include_directories(xfqdeobf-core0 PRIVATE .)
 
-target_link_options(xfqdeobf-core0 PRIVATE "-Wl,-e,__libqauxv_main")
+target_link_options(xfqdeobf-core0 PRIVATE "-Wl,-e,__libxfqdeobf_main")
 
 target_link_libraries(xfqdeobf-core0 qauxv-version dobby mmkv dexkit_static unwindstack base silk
         c dl fmt-header-only z lzma lsplant_static ${ANDROID_LIBS}

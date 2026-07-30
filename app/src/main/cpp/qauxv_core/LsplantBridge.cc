@@ -187,4 +187,4 @@ static JNINativeMethod gMethods[] = {
 };
 // @formatter:on
 
-REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("io/github/qauxv/util/hookimpl/lsplant/LsplantBridge", gMethods);
+REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("com/fanqie/xfqdeobf/util/hookimpl/lsplant/LsplantBridge", gMethods);

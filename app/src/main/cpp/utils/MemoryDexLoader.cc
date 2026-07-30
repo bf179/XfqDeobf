@@ -352,4 +352,4 @@ static JNINativeMethod gMethods[] = {
         {"nativeCreateDexFileFormBytesBelowOreo", "([BLjava/lang/ClassLoader;Ljava/lang/String;)Ldalvik/system/DexFile;", reinterpret_cast<void*>(Java_com_fanqie_xfqdeobf_util_dyn_MemoryDexLoader_nativeCreateDexFileFormBytesBelowOreo)},
 };
 //@formatter:on
-REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("io/github/qauxv/util/dyn/MemoryDexLoader", gMethods);
+REGISTER_PRIMARY_PRE_INIT_NATIVE_METHODS("com/fanqie/xfqdeobf/util/dyn/MemoryDexLoader", gMethods);
