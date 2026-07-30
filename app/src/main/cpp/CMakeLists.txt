@@ -60,6 +60,7 @@ add_library(xfqdeobf-core0 SHARED
         misc/exec.c
         misc/v2sign.cc
         misc/md5.cpp
+        misc/mmkv_compat.cc
 
         ../../../../libs/dexkit/DexKit/dexkit/src/main/cpp/native-bridge.cpp
 
