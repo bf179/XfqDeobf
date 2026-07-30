@@ -1,30 +1,11 @@
 /*
- * QAuxiliary - An Xposed module for QQ/TIM
- * Copyright (C) 2019-2022 qwq233@qwq2333.top
- * https://github.com/cinit/QAuxiliary
- *
- * This software is non-free but opensource software: you can redistribute it
- * and/or modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as published
- * by QAuxiliary contributors.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * and eula along with this software.  If not, see
- * <https://www.gnu.org/licenses/>
- * <https://github.com/cinit/QAuxiliary/blob/master/LICENSE.md>.
+ * XfqDeobf - An Xposed module for QQ image deobfuscation
  */
 package cc.ioctl.hook;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static cc.ioctl.util.HostInfo.requireMinQQVersion;
-import static com.fanqie.xfqdeobf.util.Initiator.load;
+import static io.github.qauxv.util.Initiator.load;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,35 +16,32 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import cc.hicore.QApp.QAppUtils;
 import cc.ioctl.util.HookUtils;
 import cc.ioctl.util.HostInfo;
 import cc.ioctl.util.LayoutHelper;
 import cc.ioctl.util.Reflex;
-import com.fanqie.xfqdeobf.BuildConfig;
-import com.fanqie.xfqdeobf.R;
-import com.fanqie.xfqdeobf.activity.SettingsUiFragmentHostActivity;
-import com.fanqie.xfqdeobf.base.annotation.FunctionHookEntry;
-import com.fanqie.xfqdeobf.core.HookInstaller;
-import com.fanqie.xfqdeobf.fragment.EulaFragment;
-import com.fanqie.xfqdeobf.fragment.FuncStatusDetailsFragment;
-import com.fanqie.xfqdeobf.hook.BasePersistBackgroundHook;
-import com.fanqie.xfqdeobf.lifecycle.Parasitics;
-import com.fanqie.xfqdeobf.step.Step;
-import com.fanqie.xfqdeobf.util.Initiator;
-import com.fanqie.xfqdeobf.util.LicenseStatus;
-import com.fanqie.xfqdeobf.util.Log;
-import com.fanqie.xfqdeobf.util.QQVersion;
-import com.fanqie.xfqdeobf.util.dexkit.DexDeobfsProvider;
-import com.fanqie.xfqdeobf.util.dexkit.DexKit;
-import com.fanqie.xfqdeobf.util.dexkit.DexKitTargetSealedEnum;
-import com.fanqie.xfqdeobf.util.dexkit.SimpleItemProcessor_Method;
-import com.fanqie.xfqdeobf.util.dexkit.impl.DexKitDeobfs;
-import com.fanqie.xfqdeobf.util.xpcompat.XC_MethodHook;
-import com.fanqie.xfqdeobf.util.xpcompat.XposedBridge;
-import com.fanqie.xfqdeobf.util.xpcompat.XposedHelpers;
+import io.github.qauxv.activity.SettingsUiFragmentHostActivity;
+import io.github.qauxv.base.annotation.FunctionHookEntry;
+import io.github.qauxv.core.HookInstaller;
+import io.github.qauxv.fragment.EulaFragment;
+import io.github.qauxv.fragment.FuncStatusDetailsFragment;
+import io.github.qauxv.hook.BasePersistBackgroundHook;
+import io.github.qauxv.lifecycle.Parasitics;
+import io.github.qauxv.step.Step;
+import io.github.qauxv.util.Initiator;
+import io.github.qauxv.util.LicenseStatus;
+import io.github.qauxv.util.Log;
+import io.github.qauxv.util.QQVersion;
+import io.github.qauxv.util.dexkit.DexDeobfsProvider;
+import io.github.qauxv.util.dexkit.DexKit;
+import io.github.qauxv.util.dexkit.DexKitTargetSealedEnum;
+import io.github.qauxv.util.dexkit.SimpleItemProcessor_Method;
+import io.github.qauxv.util.dexkit.impl.DexKitDeobfs;
+import io.github.qauxv.util.xpcompat.XC_MethodHook;
+import io.github.qauxv.util.xpcompat.XposedBridge;
+import io.github.qauxv.util.xpcompat.XposedHelpers;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -84,11 +62,6 @@ import org.luckypray.dexkit.result.MethodDataList;
 public class SettingEntryHook extends BasePersistBackgroundHook {
 
     public static final SettingEntryHook INSTANCE = new SettingEntryHook();
-
-    private static final int BG_TYPE_SINGLE = 0;
-    private static final int BG_TYPE_FIRST = 1;
-    private static final int BG_TYPE_MIDDLE = 2;
-    private static final int BG_TYPE_LAST = 3;
 
     // am start "intent:#Intent;component=com.tencent.mobileqq/com.tencent.mobileqq.activity.QPublicFragmentActivity;S.public_fragment_class=com.tencent.mobileqq.setting.main.MainSettingFragment;end"
 
@@ -129,7 +102,7 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
 
     private boolean isNeedFind() {
         return QAppUtils.isQQnt()
-                && requireMinQQVersion(QQVersion.QQ_9_2_10)
+                && HostInfo.requireMinQQVersion(QQVersion.QQ_9_2_10)
                 && DexKit.getMethodDescFromCacheImpl(SimpleItemProcessor_Method.INSTANCE) == null;
     }
 
@@ -155,8 +128,14 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
 
     @Override
     public boolean initOnce() throws Exception {
-        injectSettingEntryForMainSettingConfigProvider();
-        // below 8.9.70
+        android.util.Log.i("FanqieDebug", "[SettingEntryHook] initOnce() START");
+        try {
+            injectSettingEntryForMainSettingConfigProvider();
+        } catch (Throwable t) {
+            android.util.Log.e("FanqieDebug", "[SettingEntryHook] injectSettingEntry failed: " + t, t);
+            throw t;
+        }
+        // Legacy path for QQ < 8.9.70
         Class<?> kQQSettingSettingActivity = Initiator._QQSettingSettingActivity();
         if (kQQSettingSettingActivity != null) {
             XposedHelpers.findAndHookMethod(kQQSettingSettingActivity, "doOnCreate", Bundle.class, mAddModuleEntry);
@@ -167,19 +146,18 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                     LayoutInflater.class, ViewGroup.class, Bundle.class);
             XposedBridge.hookMethod(doOnCreateView, mAddModuleEntry);
         }
+        android.util.Log.i("FanqieDebug", "[SettingEntryHook] initOnce() DONE");
         return true;
     }
 
     private void injectSettingEntryForMainSettingConfigProvider() throws ReflectiveOperationException {
-        // 8.9.70+
+        // QQ 8.9.70+
         Class<?> kMainSettingFragment = Initiator.load("com.tencent.mobileqq.setting.main.MainSettingFragment");
         if (kMainSettingFragment != null) {
-            // MainSettingConfigProvider was removed in 9.1.65.24690(9516) gray release
             Class<?> kMainSettingConfigProvider = Initiator.load("com.tencent.mobileqq.setting.main.MainSettingConfigProvider");
-            // 9.1.20+, NewSettingConfigProvider, A/B test on 9.1.20
             Class<?> kNewSettingConfigProvider = Initiator.load("com.tencent.mobileqq.setting.main.NewSettingConfigProvider");
-            // 9.2.30, NewSettingConfigProvider was obfuscated to b
             Class<?> kNewSettingConfigProviderObf = Initiator.load("com.tencent.mobileqq.setting.main.b");
+
             Method getItemProcessListOld = null;
             if (kMainSettingConfigProvider != null) {
                 getItemProcessListOld = Reflex.findSingleMethod(kMainSettingConfigProvider, List.class, false, Context.class);
@@ -192,6 +170,7 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
             if (kNewSettingConfigProviderObf != null) {
                 getItemProcessListNewObf = Reflex.findSingleMethod(kNewSettingConfigProviderObf, List.class, false, Context.class);
             }
+
             if (getItemProcessListOld == null && getItemProcessListNew == null && getItemProcessListNewObf == null) {
                 throw new IllegalStateException("getItemProcessListOld == null && getItemProcessListNew == null && getItemProcessListNewObf == null");
             }
@@ -210,17 +189,11 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 throw new IllegalStateException("kAbstractItemProcessor == null");
             }
             List<Class<?>> possibleSimpleItemProcessorCandidates = new ArrayList<>(6);
-            // SimpleItemProcessor has too few xrefs. I have no idea how to find it without a list of candidates.
             final String[] possibleSimpleItemProcessorNames = new String[]{
-                    // 8.9.70 ~ 9.0.0
                     "com.tencent.mobileqq.setting.processor.g",
-                    // 9.0.8+
                     "com.tencent.mobileqq.setting.processor.h",
-                    // 9.1.50 (9006)
                     "com.tencent.mobileqq.setting.processor.i",
-                    // 9.1.70.25540 (9856) gray
                     "com.tencent.mobileqq.setting.processor.j",
-                    // 9.1.28.21880 (8398) gray
                     "as3.i",
             };
             for (String name : possibleSimpleItemProcessorNames) {
@@ -229,8 +202,7 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                     possibleSimpleItemProcessorCandidates.add(klass);
                 }
             }
-            // use 'SimpleItemProcessor' keyword to search (9.2.10 ~ 9.3.10)
-            if (requireMinQQVersion(QQVersion.QQ_9_2_10)) {
+            if (HostInfo.requireMinQQVersion(QQVersion.QQ_9_2_10)) {
                 Method m = DexKit.loadMethodFromCache(SimpleItemProcessor_Method.INSTANCE);
                 if (m != null) {
                     Class<?> klass = m.getDeclaringClass();
@@ -239,7 +211,6 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                     }
                 }
             }
-            // assert possibleSimpleItemProcessorCandidates.size() == 1;
             if (possibleSimpleItemProcessorCandidates.size() != 1) {
                 throw new IllegalStateException("possibleSimpleItemProcessorCandidates.size() != 1, got " + possibleSimpleItemProcessorCandidates);
             }
@@ -248,15 +219,12 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
             {
                 List<Method> candidates = ArraysKt.filter(kSimpleItemProcessor.getDeclaredMethods(), m -> {
                     Class<?>[] argt = m.getParameterTypes();
-                    // NOSONAR java:S1872 not same class
                     return m.getReturnType() == void.class && argt.length == 1 && Function0.class.getName().equals(argt[0].getName());
                 });
                 candidates.sort(Comparator.comparing(Method::getName));
-                // TIM 4.0.95.4001 only have one method, that is the one we need (onClick() lambda)
                 if (candidates.size() != 2 && candidates.size() != 1) {
-                    throw new IllegalStateException("com.tencent.mobileqq.setting.processor.g.?(Function0)V candidates.size() != 1|2");
+                    throw new IllegalStateException("setOnClickListener candidates.size() != 1|2");
                 }
-                // take the smaller one
                 setOnClickListener = candidates.get(0);
             }
             Constructor<?> ctorSimpleItemProcessor;
@@ -265,8 +233,6 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 Constructor<?> c = null;
                 int i = 0;
                 try {
-                    // Since version QQ version X, where X <= 9.1.91.266545 (10298). I didn't attempt to find the exact value of X.
-                    // tianshuPath : String? = null
                     c = kSimpleItemProcessor.getDeclaredConstructor(Context.class, int.class, CharSequence.class, int.class,
                             String.class);
                     i = 5;
@@ -280,6 +246,7 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 ctorSimpleItemProcessorArgc = i;
             }
             XC_MethodHook callback = HookUtils.afterAlways(this, 50, param -> {
+                android.util.Log.i("FanqieDebug", "[SettingEntryHook] getItemProcessList callback fired");
                 List<Object> result = (List<Object>) param.getResult();
                 Context ctx = (Context) param.args[0];
                 Class<?> kItemProcessorGroup = result.get(0).getClass();
@@ -287,7 +254,6 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 try {
                     ctor = kItemProcessorGroup.getDeclaredConstructor(List.class, CharSequence.class, CharSequence.class);
                 } catch (NoSuchMethodException e) {
-                    // 9.2.30
                     ctor = kItemProcessorGroup.getDeclaredConstructor(List.class, CharSequence.class, CharSequence.class,
                             int.class, load("kotlin.jvm.internal.DefaultConstructorMarker"));
                 }
@@ -296,9 +262,9 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 int resId = ctx.getResources().getIdentifier("qui_tuning", "drawable", ctx.getPackageName());
                 Object entryItem;
                 if (ctorSimpleItemProcessorArgc == 5) {
-                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, R.id.setting2Activity_settingEntryItem, "QAuxiliary", resId, null);
+                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, io.github.qauxv.R.id.setting2Activity_settingEntryItem, "小番茄解混淆", resId, null);
                 } else {
-                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, R.id.setting2Activity_settingEntryItem, "QAuxiliary", resId);
+                    entryItem = ctorSimpleItemProcessor.newInstance(ctx, io.github.qauxv.R.id.setting2Activity_settingEntryItem, "小番茄解混淆", resId);
                 }
                 Class<?> thatFunction0 = setOnClickListener.getParameterTypes()[0];
                 Object theUnit = thatFunction0.getClassLoader().loadClass("kotlin.Unit").getField("INSTANCE").get(null);
@@ -308,7 +274,6 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                         onSettingEntryClick(ctx);
                         return theUnit;
                     }
-                    // must be sth from Object
                     return method.invoke(this, args);
                 });
                 setOnClickListener.invoke(entryItem, func0);
@@ -316,7 +281,6 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 list.add(entryItem);
                 Object group;
                 if (ctor.getParameterTypes().length == 5) {
-                    // 9.2.30
                     group = ctor.newInstance(list, "", "", 6, null);
                 } else {
                     group = ctor.newInstance(list, "", "");
@@ -324,6 +288,7 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 boolean isNew = param.thisObject.getClass().getName().contains("NewSettingConfigProvider");
                 int indexToInsert = isNew ? 2 : 1;
                 result.add(indexToInsert, group);
+                android.util.Log.i("FanqieDebug", "[SettingEntryHook] ENTRY INJECTED: 小番茄解混淆 at index=" + indexToInsert);
             });
             if (getItemProcessListOld != null) {
                 XposedBridge.hookMethod(getItemProcessListOld, callback);
@@ -340,6 +305,7 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
     private final XC_MethodHook mAddModuleEntry = new XC_MethodHook(51) {
         @Override
         protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+            android.util.Log.i("FanqieDebug", "[SettingEntryHook] mAddModuleEntry callback (legacy QQ < 8.9.70)");
             try {
                 final Activity activity;
                 var thisObject = param.thisObject;
@@ -354,7 +320,6 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 {
                     Class<?> clz = load("com/tencent/mobileqq/widget/FormSimpleItem");
                     if (clz != null) {
-                        // find a candidate view field
                         for (Field f : thisObject.getClass().getDeclaredFields()) {
                             if (f.getType() == clz && !Modifier.isStatic(f.getModifiers())) {
                                 f.setAccessible(true);
@@ -379,47 +344,35 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                 }
                 View item;
                 if (itemRef == null) {
-                    // we are in triassic period?
                     item = (View) Reflex.newInstance(load("com/tencent/mobileqq/widget/FormSimpleItem"), activity, Context.class);
                 } else {
-                    // modern age
                     item = (View) Reflex.newInstance(itemRef.getClass(), activity, Context.class);
                 }
-                item.setId(R.id.setting2Activity_settingEntryItem);
-                Reflex.invokeVirtual(item, "setLeftText", "QAuxiliary", CharSequence.class);
+                item.setId(io.github.qauxv.R.id.setting2Activity_settingEntryItem);
+                Reflex.invokeVirtual(item, "setLeftText", "小番茄解混淆", CharSequence.class);
                 Reflex.invokeVirtual(item, "setBgType", 2, int.class);
                 if (HookInstaller.getFuncInitException() != null) {
                     Reflex.invokeVirtual(item, "setRightText", "[严重错误]", CharSequence.class);
-                } else if (LicenseStatus.hasUserAcceptEula()) {
-                    Reflex.invokeVirtual(item, "setRightText", BuildConfig.VERSION_NAME, CharSequence.class);
                 } else {
-                    Reflex.invokeVirtual(item, "setRightText", "[未激活]", CharSequence.class);
+                    Reflex.invokeVirtual(item, "setRightText", "v" + io.github.qauxv.BuildConfig.VERSION_NAME, CharSequence.class);
                 }
-                item.setOnClickListener(v -> {
-                    onSettingEntryClick(activity);
-                });
+                item.setOnClickListener(v -> onSettingEntryClick(activity));
                 if (itemRef != null && !HostInfo.isQQHD()) {
-                    //modern age
                     ViewGroup list = (ViewGroup) itemRef.getParent();
                     ViewGroup.LayoutParams reflp;
                     if (list.getChildCount() == 1) {
-                        //junk!
                         list = (ViewGroup) list.getParent();
                         reflp = ((View) itemRef.getParent()).getLayoutParams();
                     } else {
                         reflp = itemRef.getLayoutParams();
                     }
-                    ViewGroup.LayoutParams lp = null;
-                    if (reflp != null) {
-                        lp = new ViewGroup.LayoutParams(MATCH_PARENT, /*reflp.height*/WRAP_CONTENT);
-                    }
+                    ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
                     int index = 0;
                     int account_switch = res.getIdentifier("account_switch", "id", list.getContext().getPackageName());
                     try {
                         if (account_switch > 0) {
                             View accountItem = (View) list.findViewById(account_switch).getParent();
                             if (accountItem != null && accountItem.getParent() != null) {
-                                // fix up the parent for CHA
                                 list = (ViewGroup) accountItem.getParent();
                             }
                             for (int i = 0; i < list.getChildCount(); i++) {
@@ -437,15 +390,15 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
                     list.addView(item, index, lp);
                     fixBackgroundType(list, item, index);
                 } else {
-                    // triassic period, we have to find the ViewGroup ourselves
                     int qqsetting2_msg_notify = res.getIdentifier("qqsetting2_msg_notify", "id", activity.getPackageName());
                     if (qqsetting2_msg_notify == 0) {
-                        throw new UnsupportedOperationException("R.id.qqsetting2_msg_notify not found in triassic period");
+                        throw new UnsupportedOperationException("R.id.qqsetting2_msg_notify not found");
                     } else {
                         ViewGroup vg = (ViewGroup) activity.findViewById(qqsetting2_msg_notify).getParent().getParent();
-                        vg.addView(item, 0, new ViewGroup.LayoutParams(MATCH_PARENT, /*reflp.height*/WRAP_CONTENT));
+                        vg.addView(item, 0, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
                     }
                 }
+                android.util.Log.i("FanqieDebug", "[SettingEntryHook] LEGACY ENTRY INJECTED");
             } catch (Throwable e) {
                 traceError(e);
                 throw e;
@@ -470,13 +423,11 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
     private void fixBackgroundType(@NonNull ViewGroup parent, @NonNull View itemView, int index) {
         int lastClusterId = index - 1;
         if (lastClusterId < 0) {
-            // unexpected
             return;
         }
-        // make QQ 8.8.80 happy
         try {
             Reflex.invokeVirtual(itemView, "setBgType", 0, int.class);
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) itemView.getLayoutParams();
+            android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) itemView.getLayoutParams();
             lp.setMargins(0, LayoutHelper.dip2px(parent.getContext(), 15), 0, 0);
             parent.requestLayout();
         } catch (ReflectiveOperationException e) {

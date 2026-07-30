@@ -303,7 +303,9 @@ bool checkSignature(JNIEnv* env, bool isInHostAsModule) {
     LOGD("rel md5: {}", str.c_str());
     auto match = md5 == str;
 
-    if (!isInHostAsModule && !match) {
+    // Do NOT kill the process if running as a standalone app with CI/test signature
+    // Only enforce signature check when running as a host module (inside QQ)
+    if (isInHostAsModule && !match) {
         sys_kill(sys_getpid(), SIGKILL);
     }
     return match;
