@@ -129,24 +129,29 @@ public class SettingEntryHook extends BasePersistBackgroundHook {
     @Override
     public boolean initOnce() throws Exception {
         android.util.Log.i("FanqieDebug", "[SettingEntryHook] initOnce() START");
+        boolean newPathSuccess = false;
         try {
             injectSettingEntryForMainSettingConfigProvider();
+            newPathSuccess = true;
         } catch (Throwable t) {
-            android.util.Log.e("FanqieDebug", "[SettingEntryHook] injectSettingEntry failed: " + t, t);
-            throw t;
+            android.util.Log.e("FanqieDebug", "[SettingEntryHook] new path (QQ 8.9.70+) failed: " + t + ", trying legacy path", t);
         }
-        // Legacy path for QQ < 8.9.70
-        Class<?> kQQSettingSettingActivity = Initiator._QQSettingSettingActivity();
-        if (kQQSettingSettingActivity != null) {
-            XposedHelpers.findAndHookMethod(kQQSettingSettingActivity, "doOnCreate", Bundle.class, mAddModuleEntry);
+        // Legacy path for QQ < 8.9.70 - always try as fallback
+        try {
+            Class<?> kQQSettingSettingActivity = Initiator._QQSettingSettingActivity();
+            if (kQQSettingSettingActivity != null) {
+                XposedHelpers.findAndHookMethod(kQQSettingSettingActivity, "doOnCreate", Bundle.class, mAddModuleEntry);
+            }
+            Class<?> kQQSettingSettingFragment = Initiator._QQSettingSettingFragment();
+            if (kQQSettingSettingFragment != null) {
+                Method doOnCreateView = kQQSettingSettingFragment.getDeclaredMethod("doOnCreateView",
+                        LayoutInflater.class, ViewGroup.class, Bundle.class);
+                XposedBridge.hookMethod(doOnCreateView, mAddModuleEntry);
+            }
+        } catch (Throwable t) {
+            android.util.Log.e("FanqieDebug", "[SettingEntryHook] legacy path also failed: " + t, t);
         }
-        Class<?> kQQSettingSettingFragment = Initiator._QQSettingSettingFragment();
-        if (kQQSettingSettingFragment != null) {
-            Method doOnCreateView = kQQSettingSettingFragment.getDeclaredMethod("doOnCreateView",
-                    LayoutInflater.class, ViewGroup.class, Bundle.class);
-            XposedBridge.hookMethod(doOnCreateView, mAddModuleEntry);
-        }
-        android.util.Log.i("FanqieDebug", "[SettingEntryHook] initOnce() DONE");
+        android.util.Log.i("FanqieDebug", "[SettingEntryHook] initOnce() DONE. newPath=" + newPathSuccess);
         return true;
     }
 

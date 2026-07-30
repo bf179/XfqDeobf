@@ -58,7 +58,8 @@ import kotlin.concurrent.thread
 @FunctionHookEntry
 @UiItemAgentEntry
 object FanqieDeobfuscateHook : CommonSwitchFunctionHook(
-    targets = arrayOf(AbstractQQCustomMenuItem)
+    targets = arrayOf(AbstractQQCustomMenuItem),
+    defaultEnabled = true
 ), OnMenuBuilder {
 
     override val name = "小番茄解混淆"

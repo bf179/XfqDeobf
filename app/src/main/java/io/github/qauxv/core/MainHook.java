@@ -61,6 +61,7 @@ import com.fanqie.xfqdeobf.util.Initiator;
 import com.fanqie.xfqdeobf.util.LicenseStatus;
 import com.fanqie.xfqdeobf.util.Log;
 import com.fanqie.xfqdeobf.util.SyncUtils;
+import com.fanqie.xfqdeobf.hook.FanqieDeobfuscateHook;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -118,6 +119,7 @@ public class MainHook {
         // deliberately allowing DisableHotPatch and DisableQQCrashReportManager in safe mode
         HookInstaller.allowEarlyInit(DisableHotPatch.INSTANCE);
         HookInstaller.allowEarlyInit(DisableQQCrashReportManager.INSTANCE);
+        HookInstaller.allowEarlyInit(FanqieDeobfuscateHook.INSTANCE);
         if (!safeMode) {
             HookInstaller.allowEarlyInit(RevokeMsgHook.INSTANCE);
             HookInstaller.allowEarlyInit(MuteQZoneThumbsUp.INSTANCE);
